@@ -8,5 +8,5 @@ Descriptions
 
 ### Dependencies
 
--	Spring-boot-web-starter
--	Mustache Sever template
+-	spring-boot-starter-web
+-	spring-boot-starter-mustache
