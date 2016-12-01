@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * Created by YG-MAC on 2016. 11. 24..
  */
@@ -43,17 +45,52 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}/form")
-    public String updateForm(Model model, @PathVariable long id){
-        User user = userService.get(id);
-        if(user != null) {
-            model.addAttribute("user", user);
+    public String updateForm(Model model, @PathVariable long id, HttpSession httpSession){
+
+        User loginUser = getLoginSession(httpSession);
+        if(loginUser == null){
+            return "redirect:/users/login";
         }
+        User user = userService.get(id);
+        if(user == null || !loginUser.matchId(id)) {
+            return "redirect:/users/login";
+        }
+        model.addAttribute("user", user);
         return "user/updateForm";
     }
 
-    @PutMapping(value = "")
-    public String update(User user){
-        userService.update(user);
+    @PutMapping(value = "/{id}")
+    public String update(@PathVariable Long id,  User user, HttpSession httpSession){
+        User loginUser = getLoginSession(httpSession);
+        if(loginUser == null){
+            return "redirect:/users/login";
+        }
+        if(user == null || !loginUser.matchId(id)) {
+            return "redirect:/users/login";
+        }
+        userService.update(id, user);
         return "redirect:/users";
+    }
+
+    @GetMapping(value = "login")
+    public String loginForm(){
+        return "user/login";
+    }
+
+    @PostMapping(value = "login")
+    public String login(String userId, String password, HttpSession httpSession){
+        if(!userService.login(userId, password, httpSession)){
+            return "redirect:/user/login_failed";
+        }
+
+        return "redirect:/";
+    }
+
+    private User getLoginSession(HttpSession httpSession){
+        Object tempUser = httpSession.getAttribute("loginUser");
+        if(tempUser == null){
+            return null;
+        }
+        return (User)tempUser;
     }
 }

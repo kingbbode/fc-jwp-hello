@@ -13,7 +13,7 @@ public class User {
 
     @Id
     @GeneratedValue
-    private long idx;
+    private Long idx;
 
     @Column(unique = true, length = 20, nullable = false)
     private String userId;
@@ -27,11 +27,11 @@ public class User {
     @Column(length = 30)
     private String email;
 
-    public void setIdx(int idx) {
+    public void setIdx(Long idx) {
         this.idx = idx;
     }
 
-    public long getIdx() {
+    public Long getIdx() {
         return idx;
     }
 
@@ -68,14 +68,18 @@ public class User {
         this.email = email;
     }
 
-    public boolean isCorrectPassword(User user){
-        return this.password.equals(user.password);
+    public boolean isCorrectPassword(String password){
+        return this.password.equals(password);
     }
 
     public void changeUser(User user){
-        if(isCorrectPassword(user)){
+        if(matchId(user.idx) && isCorrectPassword(user.password)){
             this.name = user.name;
             this.email = user.email;
         }
+    }
+
+    public boolean matchId(Long idx) {
+        return this.idx.equals(idx);
     }
 }

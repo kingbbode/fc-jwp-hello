@@ -2,6 +2,7 @@ package com.kingbbode.service;
 
 import com.kingbbode.model.User;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -14,5 +15,7 @@ public interface UserService {
 
     void save(User user);
 
-    void update(User user);
+    void update(Long id, User user);
+
+    boolean login(String userId, String password, HttpSession httpSession);
 }

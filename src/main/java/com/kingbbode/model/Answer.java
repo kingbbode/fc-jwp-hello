@@ -1,36 +1,31 @@
 package com.kingbbode.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
- * Created by YG-MAC on 2016. 11. 24..
+ * Created by YG-MAC on 2016. 12. 1..
  */
 @Entity
-public class QnA {
+public class Answer {
     @Id
     @GeneratedValue
     private Long idx;
 
-    @Column(length = 100, nullable = false)
-    private String title;
 
     @Column(nullable = false)
     private String contents;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
     private User writer;
 
-    @OneToMany(mappedBy="qna")
-    private List<Answer> answers;
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_qna"))
+    private QnA qna;
+
 
     public void setIdx(Long idx) {
         this.idx = idx;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public void setContents(String contents) {
@@ -41,8 +36,7 @@ public class QnA {
         this.writer = writer;
     }
 
-
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
+    public void setQna(QnA qna) {
+        this.qna = qna;
     }
 }

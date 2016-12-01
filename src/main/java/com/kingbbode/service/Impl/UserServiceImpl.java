@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -35,8 +36,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(User updateUser) {
-        User user = userRepository.findOne(updateUser.getIdx());
-        user.changeUser(user);
+    public void update(Long id, User updateUser) {
+        User user = userRepository.findOne(id);
+        user.changeUser(updateUser);
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean login(String userId, String password, HttpSession httpSession) {
+        User user = userRepository.findByUserId(userId);
+        if(user == null || !user.isCorrectPassword(password)){
+            return false;
+        }
+        httpSession.setAttribute("loginUser", user);
+        return true;
     }
 }

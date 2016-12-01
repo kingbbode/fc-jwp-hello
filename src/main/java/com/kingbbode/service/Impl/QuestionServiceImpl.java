@@ -1,6 +1,7 @@
 package com.kingbbode.service.Impl;
 
 import com.kingbbode.model.QnA;
+import com.kingbbode.model.User;
 import com.kingbbode.repository.QuestionRepository;
 import com.kingbbode.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public QnA get(long idx) {
-        return questionRepository.getOne(idx);
+        return questionRepository.findOne(idx);
     }
 
     @Override
@@ -28,7 +29,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void save(QnA qnA) {
+    public void save(QnA qnA, User user) {
+        qnA.setWriter(user);
         questionRepository.save(qnA);
     }
 }
